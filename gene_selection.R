@@ -3,10 +3,11 @@
 #
 
 
+# set the location of your working directory
 setwd('/set/your/current/working/directory/')
 
 #
-# 1) Dataset: GEO-ID: GSE20295, Y. Zhang et al., Am J Med Genet B Neuropsychiatr Genet, 2005 	multiple brain regions, post mortem 	PD (40), healthy (53)
+# 1) Dataset: GEO-ID: GSE20295, Y. Zhang et al., Am J Med Genet B Neuropsychiatr Genet, 2005 multiple brain regions, post mortem, PD (40), healthy (53)
 #    Array platform: Affymetrix HG-U133A
 #
 # Download the data into the current working directory
@@ -67,18 +68,11 @@ if(!require('hgu133a.db'))
 
 # convert Affymetrix probe set IDs to gene symbols
 conv_ids <- mapIds(hgu133a.db, keys=as.character(rownames(zhangfilt)), c("SYMBOL"), keytype="PROBEID")
-
 head(conv_ids)
 
 
-
-#zhang_age = as.matrix(read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=F, nrows=1, skip=42, sep="\t"))
-#zhang_gender = as.matrix(read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=F, nrows=1, skip=43, sep="\t"))
-
-
-
 #
-# 2) Dataset GSE8397: L. B. Moran et al., Neurogenetics, 2006 	SN + frontal gyrus, post mortem	PD (29), healthy (18)
+# 2) Dataset GSE8397: L. B. Moran et al., Neurogenetics, 2006, SN + frontal gyrus, post mortem,	PD (29), healthy (18)
 #    Array platform: Affymetrix HG-U133A
 #
 
@@ -197,11 +191,9 @@ medianscale <- cmdscale(dist(t(moranfilt)), k = 2)
 plot(medianscale[,1], medianscale[,2], col=rainbow(2)[match(moran_outcome_final, unique(moran_outcome_final))], pch=20, main="PCoA plot", labels=NULL, cex=2, cex.axis=0.1, tck=0, xlab="Dimension 1", ylab="Dimension 2")
 
 
-
-
-# data transformation
-# VSN
-
+#
+# Data transformation using Variance stabilising normalization (VSN)
+# 
 
 if(!require('vsn'))
 {
@@ -231,10 +223,9 @@ moranvsn = exprs(vsn2(as.matrix(moranfilt)))
 meanSdPlot(moranvsn)
 
 
-
+#
 # Power calculation
-
-
+#
 
 if(!require('samr'))
 {
