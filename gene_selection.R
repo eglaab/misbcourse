@@ -1,10 +1,5 @@
 #
-# R code for the analysis of GEO dataset GSE79376
-#
-# Required input data in the working folder:
-# Affymetrix annotations for the HuGene 2.0 array contained in the file: HuGene-2_0-st-v1.na36.hg19.probeset.csv.zip
-# (this file can only be obtained via free registration on the Affymetrix website: http://www.affymetrix.com/support/technical/byproduct.affx?product=hugene-1_0-st-v1)
-#
+# R code for the data quality control and differential expression meta-analysis in the MISB course "Top-Down Systems Biology"
 #
 
 
@@ -143,7 +138,7 @@ if(!require('Biobase'))
 }
 
 # Create quality report for Zhang et al. dataset
-minimalSet <- ExpressionSet(assayData=as.matrix())
+minimalSet <- ExpressionSet(assayData=as.matrix(zhangfilt))
 arrayQualityMetrics(expressionset = minimalSet, outdir = "Quality_Report_Zhang", force = TRUE, do.logtransform = FALSE)
 
 
@@ -157,10 +152,10 @@ arrayQualityMetrics(expressionset = minimalSet, outdir = "Quality_Report_Moran",
 remove_samples_zhang = match(c("GSM606624","GSM606625","GSM606626"),colnames(zhangfilt))
 
 zhangfilt2 = zhangfilt[,-remove_samples_zhang]
-zhang_outcomefilt2 = zhang_outcomefilt[-remove_samples_zhang]
+zhang_outcome_final = zhang_outcomefilt[-remove_samples_zhang]
 
 # Moran dataset: no failing samples to remove
-
+moran_outcome_final = moran_outcomefilt
 
 
 # Manual outlier check
@@ -180,7 +175,7 @@ plot(hcldat)
 
 medianscale <- cmdscale(dist(t(zhangfilt2)), k = 2)
 
-plot(medianscale[,1], medianscale[,2], col=rainbow(2)[match(zhang_outcomefilt2, unique(zhang_outcomefilt2))], pch=20, main="PCoA plot", labels=NULL, cex=2, cex.axis=0.1, tck=0, xlab="Dimension 1", ylab="Dimension 2")
+plot(medianscale[,1], medianscale[,2], col=rainbow(2)[match(zhang_outcome_final, unique(zhang_outcome_final))], pch=20, main="PCoA plot", labels=NULL, cex=2, cex.axis=0.1, tck=0, xlab="Dimension 1", ylab="Dimension 2")
 
 # no apparent outliers
 
@@ -199,7 +194,7 @@ plot(hcldat)
 
 medianscale <- cmdscale(dist(t(moranfilt)), k = 2)
 
-plot(medianscale[,1], medianscale[,2], col=rainbow(2)[match(moran_outcomefilt, unique(moran_outcomefilt))], pch=20, main="PCoA plot", labels=NULL, cex=2, cex.axis=0.1, tck=0, xlab="Dimension 1", ylab="Dimension 2")
+plot(medianscale[,1], medianscale[,2], col=rainbow(2)[match(moran_outcome_final, unique(moran_outcome_final))], pch=20, main="PCoA plot", labels=NULL, cex=2, cex.axis=0.1, tck=0, xlab="Dimension 1", ylab="Dimension 2")
 
 
 
@@ -254,7 +249,7 @@ options(error=NULL)
 #
 
 # outcome "y" for two unpaired classes must be numeric labels 1, 2
-data = list(x=zhangvsn, y=ifelse(zhang_outcomefilt2=="disease state: Control",1,2), geneid=as.character(1:nrow(zhangvsn)),genenames=paste("g",as.character(1:nrow(zhangvsn)),sep=""), logged2=TRUE)
+data = list(x=zhangvsn, y=ifelse(zhang_outcome_final=="disease state: Control",1,2), geneid=as.character(1:nrow(zhangvsn)),genenames=paste("g",as.character(1:nrow(zhangvsn)),sep=""), logged2=TRUE)
 
 
 # run the simulation with 1000 permutations
@@ -283,7 +278,7 @@ samr.assess.samplesize.plot(samr.assess11)
 #
 
 # outcome "y" for two unpaired classes must be numeric labels 1, 2
-data = list(x=moranvsn, y=ifelse(moran_outcomefilt=="control",1,2), geneid=as.character(1:nrow(zhangvsn)),genenames=paste("g",as.character(1:nrow(zhangvsn)),sep=""), logged2=TRUE)
+data = list(x=moranvsn, y=ifelse(moran_outcome_final=="control",1,2), geneid=as.character(1:nrow(zhangvsn)),genenames=paste("g",as.character(1:nrow(zhangvsn)),sep=""), logged2=TRUE)
 
 
 # run the simulation with 1000 permutations
@@ -324,7 +319,7 @@ if(!require('limma'))
 	require('limma')
 }
 
-zhang_label = ifelse(zhang_outcomefilt2 == "disease state: Control","control","parkinson")
+zhang_label = ifelse(zhang_outcome_final == "disease state: Control","control","parkinson")
 design <- model.matrix(~ -1+factor(zhang_label))
 colnames(design) <- unique(zhang_label)
 
@@ -356,8 +351,8 @@ head(ttable_zhang)
 
 
 # Limma analysis of Moran dataset
-design <- model.matrix(~ -1+factor(moran_outcomefilt))
-colnames(design) <- unique(moran_outcomefilt)
+design <- model.matrix(~ -1+factor(moran_outcome_final))
+colnames(design) <- unique(moran_outcome_final)
 
 # compute simple linear model fit to microarray data (not robust)
 fit <- lmFit(moranfilt, design)
@@ -373,7 +368,7 @@ ttable_moran <- topTable(eb, n = nrow(moranfilt))
 head(ttable_moran)
 
 
-#testtop = ebayesrank(moranfilt, ifelse(moran_outcomefilt=="parkinson",1,0))
+#testtop = ebayesrank(moranfilt, ifelse(moran_outcome_final=="parkinson",1,0))
 #head(testtop)
 # same result
 
@@ -387,7 +382,7 @@ if(!require('metaMA'))
 	require('metaMA')
 }
 
-metarank = pvalcombination(esets=list(zhangfilt2, moranfilt), classes=list(zhang_y, moran_outcomefilt), moderated = "limma", BHth = 0.05)
+metarank = pvalcombination(esets=list(zhangfilt2, moranfilt), classes=list(zhang_y, moran_outcome_final), moderated = "limma", BHth = 0.05)
 #     DE     IDD    Loss     IDR     IRR 
 #4486.00 1118.00 2254.00   24.92   40.09
 
@@ -423,8 +418,10 @@ head(compresmeta)
 dim(compresmeta)
 #[1] 4486    6
 
-# add gene description (biomart)
 
+# save datasets to continue with pathway analysis tomorrow
+save(moranvsn, moran_outcome_final, file="moran_preprocessed.Rdata")
+save(zhangvsn, zhang_outcome_final, file="zhang_preprocessed.Rdata")
 
-
-# continue with pathway analysis
+# For reproducibility: show and save information on all loaded R package versions
+sessionInfo()
