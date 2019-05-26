@@ -107,11 +107,8 @@ table(moran_outcomefilt)
 #  control Parkinson 
 #       15        24
 
-
 all(rownames(zhangfilt) == rownames(moranfilt))
 # TRUE
-
-
 
 
 # Quality control
@@ -293,12 +290,9 @@ samr.assess11 <- samr.assess.samplesize(samr.obj, data, log2(1.1), samplesize.fa
 samr.assess.samplesize.plot(samr.assess11)
 
 
-
-
 #
 # DEG Analysis of individual datasets
 #
-
 
 # Moran et al. data
 # load R-packages (or install them if not available)
@@ -335,12 +329,6 @@ head(ttable_zhang)
 #221806_s_at  0.9908612 8.231832  5.612125 6.702084e-06 0.01907364 3.667263
 
 
-#source('/Users/enrico.glaab 1/Downloads/staticconvert.R')
-#testtop = ebayesrank(zhangfilt2, ifelse(zhang_label=="parkinson",1,0))
-#head(testtop)
-# same result
-
-
 # Limma analysis of Moran dataset
 design <- model.matrix(~ -1+factor(moran_outcome_final))
 colnames(design) <- unique(moran_outcome_final)
@@ -358,10 +346,6 @@ ttable_moran <- topTable(eb, n = nrow(moranfilt))
 
 head(ttable_moran)
 
-
-#testtop = ebayesrank(moranfilt, ifelse(moran_outcome_final=="parkinson",1,0))
-#head(testtop)
-# same result
 
 #
 # Meta-analysis
