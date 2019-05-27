@@ -44,6 +44,46 @@ if(!require('Biobase'))
   require('Biobase')
 }
 
+# load R-packages for power calculation
+if(!require('impute'))
+{
+ if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+ BiocManager::install("impute")
+ require('impute')
+}
+
+if(!require('samr'))
+{
+  install.packages("samr")
+  require('samr')	
+}
+options(error=NULL)
+
+# load R-package for Variance stabilizing normalization
+if(!require('vsn'))
+{
+	if (!requireNamespace("vsn", quietly = TRUE))
+	    install.packages("BiocManager")
+	BiocManager::install("vsn")
+	require('vsn')
+}
+
+# load R-packages (or install them if not available)
+if(!require('limma'))
+{
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+	BiocManager::install("limma", version = "3.8")
+	require('limma')
+}
+
+# load R-package for meta-analysis
+if(!require('metaMA'))
+{
+	install.packages('metaMA')
+	require('metaMA')
+}
 
 
 
@@ -227,14 +267,6 @@ plot(medianscale[,1], medianscale[,2], col=rainbow(2)[match(moran_outcome_final,
 # Data transformation using Variance stabilising normalization (VSN)
 # 
 
-if(!require('vsn'))
-{
-	if (!requireNamespace("vsn", quietly = TRUE))
-	    install.packages("BiocManager")
-	BiocManager::install("vsn")
-	require('vsn')
-}
-
 # check for intensity-dependent variance
 meanSdPlot(as.matrix(zhangfilt2))
 # yes, variance dependence on average intensity -- apply VSN transformation
@@ -258,18 +290,6 @@ meanSdPlot(moranvsn)
 #
 # Power calculation
 #
-
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("impute")
-
-if(!require('samr'))
-{
-  install.packages("samr")
-  require('samr')
-}
-
-options(error=NULL)
 
 #
 # Zhang et al. data - power calculation
@@ -334,14 +354,7 @@ samr.assess.samplesize.plot(samr.assess11)
 #
 
 # Moran et al. data
-# load R-packages (or install them if not available)
-if(!require('limma'))
-{
-  if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-	BiocManager::install("limma", version = "3.8")
-	require('limma')
-}
+
 
 zhang_label = ifelse(zhang_outcome_final == "disease state: Control","control","parkinson")
 design <- model.matrix(~ -1+factor(zhang_label))
@@ -389,12 +402,6 @@ head(ttable_moran)
 #
 # Meta-analysis
 #
-
-if(!require('metaMA'))
-{
-	install.packages('metaMA')
-	require('metaMA')
-}
 
 metarank = pvalcombination(esets=list(zhangfilt2, moranfilt), classes=list(zhang_label, moran_outcome_final), moderated = "limma", BHth = 0.05)
 #     DE     IDD    Loss     IDR     IRR 
