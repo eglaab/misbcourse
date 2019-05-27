@@ -357,7 +357,7 @@ if(!require('metaMA'))
 	require('metaMA')
 }
 
-metarank = pvalcombination(esets=list(zhangfilt2, moranfilt), classes=list(zhang_y, moran_outcome_final), moderated = "limma", BHth = 0.05)
+metarank = pvalcombination(esets=list(zhangfilt2, moranfilt), classes=list(zhang_label, moran_outcome_final), moderated = "limma", BHth = 0.05)
 #     DE     IDD    Loss     IDR     IRR 
 #4486.00 1118.00 2254.00   24.92   40.09
 
