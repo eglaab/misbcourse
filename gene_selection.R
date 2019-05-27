@@ -6,6 +6,45 @@
 # - Install the current version of R-Studio (1.2) from: https://www.rstudio.com/products/rstudio/download/
 #
 
+#
+# Installation and loading of R-packages
+#
+
+# load annotation package for gene ID conversion
+
+# for old R version:
+# source("http://bioconductor.org/biocLite.R")
+# biocLite("hgu133a.db")
+
+if(!require('hgu133a.db'))
+{
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+	    install.packages("BiocManager")
+	BiocManager::install("hgu133a.db")
+	require('hgu133a.db')
+}
+
+# load R-packages for quality control 
+
+if(!require('arrayQualityMetrics'))
+{
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+  BiocManager::install("arrayQualityMetrics")
+  install.packages("gridSVG")
+  # install.packages("https://cran.r-project.org/src/contrib/Archive/gridSVG/gridSVG_1.4-3.tar.gz", repos=NULL)
+  require('arrayQualityMetrics')
+}
+if(!require('Biobase'))
+{
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+  BiocManager::install("Biobase")
+  require('Biobase')
+}
+
+
 
 
 # set the location of your working directory (note that there are differences between Windows & Mac concerning the use of back slash "\" vs. forward slash "/")
@@ -15,6 +54,7 @@ setwd('/Users/set/your/current/working/directory/here')
 
 # format for Windows
 setwd('C:/set/your/current/working/directory/here')
+
 
 #
 # 1) Dataset: GEO-ID: GSE20295, Y. Zhang et al., Am J Med Genet B Neuropsychiatr Genet, 2005 multiple brain regions, post mortem, PD (40), healthy (53)
@@ -69,21 +109,6 @@ table(zhang_outcomefilt)
 #           disease state: Control disease state: Parkinsons disease 
 #                               18                                11
 
-
-# load annotation package for gene ID conversion
-
-# for old R version:
-# source("http://bioconductor.org/biocLite.R")
-# biocLite("hgu133a.db")
-
-if(!require('hgu133a.db'))
-{
-	if (!requireNamespace("BiocManager", quietly = TRUE))
-	    install.packages("BiocManager")
-	BiocManager::install("hgu133a.db")
-	require('hgu133a.db')
-}
-
 # convert Affymetrix probe set IDs to gene symbols
 conv_ids <- mapIds(hgu133a.db, keys=as.character(rownames(zhangfilt)), c("SYMBOL"), keytype="PROBEID")
 head(conv_ids)
@@ -137,21 +162,6 @@ all(rownames(zhangfilt) == rownames(moranfilt))
 
 
 # Quality control
-
-if(!require('arrayQualityMetrics'))
-{
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("arrayQualityMetrics")
-  install.packages("gridSVG")
-  # install.packages("https://cran.r-project.org/src/contrib/Archive/gridSVG/gridSVG_1.4-3.tar.gz", repos=NULL)
-  require('arrayQualityMetrics')
-}
-if(!require('Biobase'))
-{
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("Biobase")
-  require('Biobase')
-}
 
 # Create quality report for Zhang et al. dataset
 minimalSet <- ExpressionSet(assayData=as.matrix(zhangfilt))
