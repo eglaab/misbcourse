@@ -353,9 +353,7 @@ samr.assess.samplesize.plot(samr.assess11)
 # DEG Analysis of individual datasets
 #
 
-# Moran et al. data
-
-
+# Limma analysis of Zhang dataset
 zhang_label = ifelse(zhang_outcome_final == "disease state: Control","control","parkinson")
 design <- model.matrix(~ -1+factor(zhang_label))
 colnames(design) <- unique(zhang_label)
