@@ -224,6 +224,10 @@ meanSdPlot(moranvsn)
 # Power calculation
 #
 
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("impute")
+
 if(!require('samr'))
 {
   install.packages("samr")
