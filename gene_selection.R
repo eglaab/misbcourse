@@ -20,7 +20,15 @@ setwd('C:/set/your/current/working/directory/here')
 # 1) Dataset: GEO-ID: GSE20295, Y. Zhang et al., Am J Med Genet B Neuropsychiatr Genet, 2005 multiple brain regions, post mortem, PD (40), healthy (53)
 #    Array platform: Affymetrix HG-U133A
 #
+
 # Download the data into the current working directory
+
+# for Windows - manually via the web-browser using this url:
+#
+#ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE20nnn/GSE20295/matrix/GSE20295_series_matrix.txt.gz
+#
+
+# for Mac/Linux - automatically via R command line
 system('wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE20nnn/GSE20295/matrix/GSE20295_series_matrix.txt.gz')
 
 # Read the data into R
@@ -87,6 +95,13 @@ head(conv_ids)
 #
 
 # Download the data into the current working directory
+
+# for Windows - manually via the web-browser using this url:
+#
+# ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE8nnn/GSE8397/matrix/GSE8397-GPL96_series_matrix.txt.gz
+#
+
+# for Mac/Linux - automatically via R command line
 system('wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE8nnn/GSE8397/matrix/GSE8397-GPL96_series_matrix.txt.gz')
 
 # Read the data into R
