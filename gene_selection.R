@@ -8,8 +8,13 @@
 
 
 
-# set the location of your working directory
-setwd('/set/your/current/working/directory/')
+# set the location of your working directory (note that there are differences between Windows & Mac concerning the use of back slash "\" vs. forward slash "/")
+
+# format for Mac & Linux systems
+setwd('/Users/set/your/current/working/directory/here')
+
+# format for Windows
+setwd('C:/set/your/current/working/directory/here')
 
 #
 # 1) Dataset: GEO-ID: GSE20295, Y. Zhang et al., Am J Med Genet B Neuropsychiatr Genet, 2005 multiple brain regions, post mortem, PD (40), healthy (53)
