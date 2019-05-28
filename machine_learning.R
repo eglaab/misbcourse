@@ -20,6 +20,12 @@ if(!require('cluster'))
 	require('cluster')
 }
 
+if(!require('mclust'))
+{
+	install.packages('mclust')
+	require('mclust')
+}
+
 # install R-packages for classification
 if(!require('randomForest'))
 {
@@ -211,6 +217,30 @@ plot(silhouette(kclust2_moran$cluster, distmat_moran), main="Silhouette plot of 
 
 # External cluster validity assessment - Adjusted rand index
 
+# Zhang et al. - k-Means, k = 2
+adjustedRandIndex(kclust2_zhang$cluster, zhang_outcome_final)
+
+# Zhang et al. - k-Means, k = 3
+adjustedRandIndex(kclust3_zhang$cluster, zhang_outcome_final)
+
+# Zhang et al. - k-Means, k = 2
+adjustedRandIndex(hcl2_zhang, zhang_outcome_final)
+
+
+# Moran et al. - k-Means, k = 3
+adjustedRandIndex(hcl3_moran, moran_outcome_final)
+
+# Moran et al. - k-Means, k = 2
+adjustedRandIndex(kclust2_moran$cluster, moran_outcome_final)
+
+# Moran et al. - k-Means, k = 3
+adjustedRandIndex(kclust3_moran$cluster, moran_outcome_final)
+
+# Moran et al. - k-Means, k = 2
+adjustedRandIndex(hcl2_moran, moran_outcome_final)
+
+# Moran et al. - k-Means, k = 3
+adjustedRandIndex(hcl3_moran, moran_outcome_final)
 
 
 
