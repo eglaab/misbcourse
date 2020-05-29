@@ -10,6 +10,15 @@
 # Installation and loading of R-packages
 #
 
+## Default repo
+local({r <- getOption("repos")
+       r["CRAN"] <- "https://cloud.r-project.org" 
+       options(repos=r)
+})
+
+update.packages(ask = FALSE, dependencies = c('Suggests'))
+
+
 # load annotation package for gene ID conversion
 
 # for old R version:
@@ -20,17 +29,17 @@ if(!require('hgu133a.db'))
 {
 	if (!requireNamespace("BiocManager", quietly = TRUE))
 	    install.packages("BiocManager")
-	BiocManager::install("hgu133a.db")
+	BiocManager::install("hgu133a.db", suppressUpdates=TRUE, ask = FALSE)
 	require('hgu133a.db')
 }
 
-# load R-packages for quality control 
+# load R-packages for quality control
 
 if(!require('arrayQualityMetrics'))
 {
   if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-  BiocManager::install("arrayQualityMetrics")
+  BiocManager::install("arrayQualityMetrics", suppressUpdates=TRUE, ask = FALSE)
   install.packages("gridSVG")
   # install.packages("https://cran.r-project.org/src/contrib/Archive/gridSVG/gridSVG_1.4-3.tar.gz", repos=NULL)
   require('arrayQualityMetrics')
@@ -40,7 +49,7 @@ if(!require('Biobase'))
   if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-  BiocManager::install("Biobase")
+  BiocManager::install("Biobase", suppressUpdates=TRUE, ask = FALSE)
   require('Biobase')
 }
 
@@ -49,14 +58,14 @@ if(!require('impute'))
 {
  if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
- BiocManager::install("impute")
+ BiocManager::install("impute", suppressUpdates=TRUE, ask = FALSE)
  require('impute')
 }
 
 if(!require('samr'))
 {
   install.packages("samr")
-  require('samr')	
+  require('samr')
 }
 options(error=NULL)
 
@@ -65,17 +74,8 @@ if(!require('vsn'))
 {
 	if (!requireNamespace("vsn", quietly = TRUE))
 	    install.packages("BiocManager")
-	BiocManager::install("vsn")
+	BiocManager::install("vsn", suppressUpdates=TRUE, ask = FALSE)
 	require('vsn')
-}
-
-# load R-packages (or install them if not available)
-if(!require('limma'))
-{
-  if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-	BiocManager::install("limma", version = "3.8")
-	require('limma')
 }
 
 # load R-package for meta-analysis
@@ -359,7 +359,7 @@ design <- model.matrix(~ -1+factor(zhang_label))
 colnames(design) <- unique(zhang_label)
 
 # compute simple linear model fit to microarray data (not robust)
-fit <- lmFit(zhangfilt2, design)
+fit <- lmFit(zhangvsn, design)
 
 contrast.matrix = makeContrasts(parkinson-control, levels=design)
 fit2 = contrasts.fit(fit, contrast.matrix)
@@ -370,13 +370,6 @@ eb <- eBayes(fit2)
 ttable_zhang <- topTable(eb, n = nrow(zhangfilt2)) 
 
 head(ttable_zhang)
-#                 logFC  AveExpr         t      P.Value  adj.P.Val        B
-#215812_s_at  0.4977913 7.653852  6.433649 8.067726e-07 0.01513624 5.470990
-#210854_x_at  0.5029501 8.069007  6.229166 1.358546e-06 0.01513624 5.030257
-#201658_at   -0.9458851 9.560856 -6.044963 2.180163e-06 0.01619352 4.628313
-#219718_at   -0.4486547 7.372100 -5.670098 5.761279e-06 0.01907364 3.797219
-#213843_x_at  0.4714778 8.020686  5.643794 6.170385e-06 0.01907364 3.738298
-#221806_s_at  0.9908612 8.231832  5.612125 6.702084e-06 0.01907364 3.667263
 
 
 # Limma analysis of Moran dataset
@@ -384,7 +377,7 @@ design <- model.matrix(~ -1+factor(moran_outcome_final))
 colnames(design) <- unique(moran_outcome_final)
 
 # compute simple linear model fit to microarray data (not robust)
-fit <- lmFit(moranfilt, design)
+fit <- lmFit(moranvsn, design)
 
 contrast.matrix = makeContrasts(parkinson-control, levels=design)
 fit2 = contrasts.fit(fit, contrast.matrix)
@@ -395,53 +388,29 @@ eb <- eBayes(fit2)
 ttable_moran <- topTable(eb, n = nrow(moranfilt)) 
 
 head(ttable_moran)
-#                logFC  AveExpr          t      P.Value    adj.P.Val        B
-#213920_at   -1.568310 4.203679 -11.013076 1.799182e-13 2.437296e-09 20.29504
-#207087_x_at -1.702229 4.980834 -10.940202 2.187583e-13 2.437296e-09 20.11309
-#209797_at   -1.023059 7.413173 -10.457428 8.126492e-13 6.036087e-09 18.88803
-#209560_s_at -3.335964 4.377195  -9.804797 5.026856e-12 2.800336e-08 17.17761
-#205391_x_at -2.052499 5.183501  -9.706350 6.648986e-12 2.963187e-08 16.91421
-#205390_s_at -1.427009 7.179817  -9.612307 8.695324e-12 3.229298e-08 16.66129
 
 #
 # Meta-analysis
 #
 
-metarank = pvalcombination(esets=list(zhangfilt2, moranfilt), classes=list(zhang_label, moran_outcome_final), moderated = "limma", BHth = 0.05)
-#     DE     IDD    Loss     IDR     IRR 
-#4486.00 1118.00 2254.00   24.92   40.09
+metarank = pvalcombination(esets=list(zhangvsn, moranvsn), classes=list(zhang_label, moran_outcome_final), moderated = "limma", BHth = 0.05)
 
-metacomb <- cbind(rownames(zhangfilt2)[metarank$Meta], metarank$TestStatistic[metarank$Meta])
+metacomb <- cbind(rownames(zhangvsn)[metarank$Meta], metarank$TestStatistic[metarank$Meta])
 metaord <- order(abs(as.numeric(metacomb[,2])), decreasing=TRUE)
 
-logfcmat = cbind(ttable_zhang[match(rownames(zhangfilt2), rownames(ttable_zhang)),]$logFC, ttable_moran[match(rownames(zhangfilt2), rownames(ttable_moran)),]$logFC)
-rownames(logfcmat)= rownames(zhangfilt2)
+logfcmat = cbind(ttable_zhang[match(rownames(zhangvsn), rownames(ttable_zhang)),]$logFC, ttable_moran[match(rownames(zhangvsn), rownames(ttable_moran)),]$logFC)
+rownames(logfcmat)= rownames(zhangvsn)
 
-pmat = cbind(ttable_zhang[match(rownames(zhangfilt2), rownames(ttable_zhang)),]$P, ttable_moran[match(rownames(zhangfilt2), rownames(ttable_moran)),]$P)
-rownames(pmat)= rownames(zhangfilt2)
+pmat = cbind(ttable_zhang[match(rownames(zhangvsn), rownames(ttable_zhang)),]$P, ttable_moran[match(rownames(zhangvsn), rownames(ttable_moran)),]$P)
+rownames(pmat)= rownames(zhangvsn)
 
 
 compresmeta = cbind(metacomb[metaord,1], conv_ids[match(metacomb[metaord,1],rownames(logfcmat))], logfcmat[match(metacomb[metaord,1],rownames(logfcmat)),], pmat[match(metacomb[metaord,1],rownames(pmat)),], metacomb[metaord,2])
 colnames(compresmeta) = c("ID", "Gene Symbol", paste(c("Zhang","Moran"),"logFC"), paste(c("Zhang","Moran"),"P"), "Comb. Z")
 
 head(compresmeta)
-#            ID            Gene Symbol Zhang logFC         Moran logFC         Zhang P               
-#213920_at   "213920_at"   "CUX2"      "-1.5683104206"     "-1.5683104206"     "1.7991820716903e-13" 
-#207087_x_at "207087_x_at" "ANK1"      "-1.70222868664166" "-1.70222868664166" "2.18758321067476e-13"
-#203282_at   "203282_at"   "GBE1"      "-2.13122487826666" "-2.13122487826666" "1.78042429089719e-10"
-#209797_at   "209797_at"   "CNPY2"     "-1.02305868425"    "-1.02305868425"    "8.12649167128433e-13"
-#205391_x_at "205391_x_at" "ANK1"      "-2.05249918844167" "-2.05249918844167" "6.64898637205384e-12"
-#221509_at   "221509_at"   "DENR"      "-1.16352955708333" "-1.16352955708333" "3.05431887233395e-11"
-#            Moran P                Comb. Z            
-#213920_at   "1.7991820716903e-13"  "-7.29642343429427"
-#207087_x_at "2.18758321067476e-13" "-7.2172388962685" 
-#203282_at   "1.78042429089719e-10" "-6.9554449934437" 
-#209797_at   "8.12649167128433e-13" "-6.95527826366323"
-#205391_x_at "6.64898637205384e-12" "-6.93116982534301"
-#221509_at   "3.05431887233395e-11" "-6.91812814470966"
 
 dim(compresmeta)
-#[1] 4486    6
 
 
 # save datasets to continue with pathway analysis tomorrow
