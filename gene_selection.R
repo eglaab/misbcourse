@@ -79,6 +79,16 @@ if(!require('vsn'))
 	require('vsn')
 }
 
+# install Limma package for statistical analyses
+if(!require('limma'))
+{
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+	    install.packages("BiocManager")
+
+	BiocManager::install("limma", suppressUpdates=TRUE, ask = FALSE)
+	require('limma')
+}
+
 # load R-package for meta-analysis
 if(!require('metaMA'))
 {
