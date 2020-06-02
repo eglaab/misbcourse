@@ -20,59 +20,59 @@
 # install R-package for pathway analysis
 if(!require('clusterProfiler'))
 {
-	if (!requireNamespace("BiocManager", quietly = TRUE))
-	    install.packages("BiocManager")
-	
-	BiocManager::install("clusterProfiler")
-	require('clusterProfiler')
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+  
+  BiocManager::install("clusterProfiler")
+  require('clusterProfiler')
 }
 
 if(!require('GSEABase'))
 {
-	if (!requireNamespace("BiocManager", quietly = TRUE))
-	    install.packages("BiocManager")
-	
-	BiocManager::install("GSEABase")
-	require('GSEABase')
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+  
+  BiocManager::install("GSEABase")
+  require('GSEABase')
 }
 
 
 # install Limma package for statistical analyses
 if(!require('limma'))
 {
-	if (!requireNamespace("BiocManager", quietly = TRUE))
-	    install.packages("BiocManager")
-	
-	BiocManager::install("limma")
-	require('limma')
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+  
+  BiocManager::install("limma")
+  require('limma')
 }
 
 # install R-packages for text-mining
 if(!require('XML'))
 {
-	install.packages('XML')
-	require('XML')
+  install.packages('XML')
+  require('XML')
 }
 if(!require('httr'))
 {
-	install.packages('httr')
-	require('httr')
+  install.packages('httr')
+  require('httr')
 }
 
 if(!require('easyPubMed'))
 {
-	install.packages('easyPubMed')
-	require('easyPubMed')
+  install.packages('easyPubMed')
+  require('easyPubMed')
 }
 
 # install R annotation package
 if(!require('hgu133a.db'))
 {
-	if (!requireNamespace("BiocManager", quietly = TRUE))
-	    install.packages("BiocManager")
-	
-	BiocManager::install("hgu133a.db")
-	require('hgu133a.db')
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+  
+  BiocManager::install("hgu133a.db")
+  require('hgu133a.db')
 }
 
 
@@ -132,33 +132,6 @@ mapped_symbols = sapply( as.character(annot$Gene.Symbol[mapids]) , function(x) s
 
 
 
-# get annotations to convert Affymetrix gene IDs to official HGNC gene symbols (from hgu133a.db installed above)
-# extract the gene symbol information
-x <- hgu133aSYMBOL
-
-# Get the probe identifiers that are mapped to a gene name
-mapped_probes <- mappedkeys(x)
-
-# Convert to a list
-probes2symbol <- as.list(x[mapped_probes])
-
-# check the top of the mapping table
-head(probes2symbol)
-
-
-# extract the gene description information
-x <- hgu133aGENENAME
-
-# Get the probe identifiers that are mapped to a gene name
-mapped_probes <- mappedkeys(x)
-
-# Convert to a list
-probes2desc <- as.list(x[mapped_probes])
-
-# check the top of the gene description mapping table
-head(probes2desc)
-
-
 #
 # Convert expression matrix with Affymetrix IDs to Gene Symbol matrix (if multiple probes match to a gene, take the max. average value probe as representative for the gene) 
 # 
@@ -169,43 +142,43 @@ head(probes2desc)
 #   mat_conv = vector with gene symbols corresponding to probe rownames (NA for missing conversions)
 probe2genemat <- function(matdat, mat_conv)
 {
-
-	if(nrow(matdat) != length(mat_conv))
-	{
-	  stop("Matrix does not have the same number of rows as the gene name vector")
-	}
-	
-	# take max expression vector (max = maximum of mean exp across samples), if gene occurs twice among probes
-	unq <- unique(mat_conv)
-	if(any(is.na(unq))){
-		unq <- unq[-which(is.na(unq))]
-	}
-	mat <- matrix(0.0, nrow=length(unq), ncol=ncol(matdat))
-	for(j in 1:nrow(mat))
-	{
-	  ind <- which(unq[j]==mat_conv)
-	  
-	  # show conversion progress, every 1000 probes
-	  if(j %% 1000 == 0){ 
-	    print(j)
-	  }
-	  
-	  # 1-to-1 probe to gene symbol matching
-	  if(length(ind) == 1)
-	  {
-	    mat[j,] = as.numeric(as.matrix(matdat[ind,]))
-	  } else if(length(ind) > 1){
-	    
-	    # multiple probes match to one gene symbol
-	    curmat = matdat[ind,]
-	    
-	    # compute average expression per row -> select row with max. avg. expression
-	    avg = apply(curmat, 1, mean)
-	    mat[j,] = as.numeric(as.matrix(matdat[ind[which.max(avg)],]))
-	  }
-	}
-	rownames(mat) = unq
-
+  
+  if(nrow(matdat) != length(mat_conv))
+  {
+    stop("Matrix does not have the same number of rows as the gene name vector")
+  }
+  
+  # take max expression vector (max = maximum of mean exp across samples), if gene occurs twice among probes
+  unq <- unique(mat_conv)
+  if(any(is.na(unq))){
+    unq <- unq[-which(is.na(unq))]
+  }
+  mat <- matrix(0.0, nrow=length(unq), ncol=ncol(matdat))
+  for(j in 1:nrow(mat))
+  {
+    ind <- which(unq[j]==mat_conv)
+    
+    # show conversion progress, every 1000 probes
+    if(j %% 1000 == 0){ 
+      print(j)
+    }
+    
+    # 1-to-1 probe to gene symbol matching
+    if(length(ind) == 1)
+    {
+      mat[j,] = as.numeric(as.matrix(matdat[ind,]))
+    } else if(length(ind) > 1){
+      
+      # multiple probes match to one gene symbol
+      curmat = matdat[ind,]
+      
+      # compute average expression per row -> select row with max. avg. expression
+      avg = apply(curmat, 1, mean)
+      mat[j,] = as.numeric(as.matrix(matdat[ind[which.max(avg)],]))
+    }
+  }
+  rownames(mat) = unq
+  
   return(mat)
 }
 
@@ -354,23 +327,23 @@ ranked_genelst = ttable_zhang$B
 names(ranked_genelst) = rownames(ttable_zhang)
 
 gsea_go_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                     maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
+                     TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_go_zhang)
 
 gsea_kegg_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                       maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
+                       TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_kegg_zhang)
 
 gsea_reactome_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                           maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
+                           TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_reactome_zhang)  
-  
+
 gsea_positional_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                             maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
+                             TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_positional_zhang)
 
 
@@ -382,23 +355,23 @@ ranked_genelst = ttable_moran$B
 names(ranked_genelst) = rownames(ttable_moran)
 
 gsea_go_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                     maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
+                     TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_go_moran)
 
 gsea_kegg_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                       maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
+                       TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_kegg_moran)
 
 gsea_reactome_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                           maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
+                           TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_reactome_moran)  
-  
+
 gsea_positional_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
-  TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                             maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
+                             TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
 head(gsea_positional_moran)
 
 
@@ -458,7 +431,7 @@ write.table(moran_degs[1:100], "clipboard", sep = '\t', row.names = FALSE, col.n
 pubmed_count <- function(query)
 {
   res = get_pubmed_ids(query)
- 
+  
   count <- res$Count
   return(as.numeric(count))
 }
@@ -469,12 +442,12 @@ pmi  <- function(term1, term2)
 {
   # get current size of Pubmed (for normalization)
   cur_size <- pubmed_count("1800:2100[dp]")
- 
+  
   count1 <- pubmed_count(term1)
   count2 <- pubmed_count(term2)
   count12 <- pubmed_count(paste(term1,'+AND+',term2,sep=""))
   #count12 <- pubmed_count(gsub(" ","+",paste(term1,'AND',term2,sep="+")))
- 
+  
   return( log( count12 * cur_size / (count1 * count2)) )
 }
 
@@ -484,9 +457,9 @@ gene_scores = numeric(length(zhang_degs))
 names(gene_scores) = zhang_degs
 for(i in 1:length(gene_scores))
 {
-   cat(paste("Current gene:",names(gene_scores)[i]))
-   gene_scores[i] = pmi(names(gene_scores)[i], "Parkinson")
-   cat(paste(" - PMI-score:",gene_scores[i],"\n"))
+  cat(paste("Current gene:",names(gene_scores)[i]))
+  gene_scores[i] = pmi(names(gene_scores)[i], "Parkinson")
+  cat(paste(" - PMI-score:",gene_scores[i],"\n"))
 }
 
 # Moran et al.
@@ -494,9 +467,9 @@ gene_scores = numeric(50)
 names(gene_scores) = moran_degs[1:50]
 for(i in 1:length(gene_scores))
 {
-   cat(paste("Current gene:",names(gene_scores)[i]))
-   gene_scores[i] = pmi(names(gene_scores)[i], "Parkinson")
-   cat(paste(" - PMI-score:",gene_scores[i],"\n"))
+  cat(paste("Current gene:",names(gene_scores)[i]))
+  gene_scores[i] = pmi(names(gene_scores)[i], "Parkinson")
+  cat(paste(" - PMI-score:",gene_scores[i],"\n"))
 }
 
 # Show sorted scores
@@ -514,9 +487,11 @@ gene_scores[order(gene_scores, decreasing=T)]
 #
 # DisGeNet: Go to http://www.disgenet.org
 # Choose "Search" - select "genes"
-# Copy up to 50 top-ranked genes (see code above)
+# Copy up to 50 top-ranked genes (see code below)
 # Search and go to "Summary of Gene-Disease Associations"
 # Filter by condition term of interest (e.g. Parkinson's disease)
+# Click on the link for the number of associated PubMed IDs (N. PMIDs)
+# Click on the link for the number of associated SNPs (N. SNPs)
 #
 
 
@@ -551,3 +526,4 @@ write.table(t(moran_degs[1:50]), "clipboard", sep = '::', row.names = FALSE, col
 
 # For reproducibility: show and save information on all loaded R package versions
 sessionInfo()
+			
