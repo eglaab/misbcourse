@@ -16,27 +16,27 @@
 # install R-packages for clustering
 if(!require('cluster'))
 {
-	install.packages('cluster')
-	require('cluster')
+  install.packages('cluster')
+  require('cluster')
 }
 
 if(!require('mclust'))
 {
-	install.packages('mclust')
-	require('mclust')
+  install.packages('mclust')
+  require('mclust')
 }
 
 # install R-packages for classification
 if(!require('randomForest'))
 {
-	install.packages('randomForest')
-	require('randomForest')
+  install.packages('randomForest')
+  require('randomForest')
 }
 
 if(!require('e1071'))
 {
-	install.packages('e1071')
-	require('e1071')
+  install.packages('e1071')
+  require('e1071')
 }
 
 
@@ -71,11 +71,11 @@ load(file="moran_preprocessed.Rdata") # moranvsn, moran_outcome_final
 # Parameter 2: filtsize = number of genes with highest variance to retain after filtering
 var_filter = function(X, filtsize=1000)
 {
-	filtsize <- min(nrow(X), as.numeric(filtsize))
-	variances <- apply(X, 1, var)
-	o <- order(variances, decreasing=TRUE)
-	Xfilt <- (X[o,])[1:filtsize,]
-	return(Xfilt)
+  filtsize <- min(nrow(X), as.numeric(filtsize))
+  variances <- apply(X, 1, var)
+  o <- order(variances, decreasing=TRUE)
+  Xfilt <- (X[o,])[1:filtsize,]
+  return(Xfilt)
 }
 
 # filter the expression matrices to only retain the top 2000 genes with the highest variance
@@ -223,12 +223,11 @@ adjustedRandIndex(kclust2_zhang$cluster, zhang_outcome_final)
 # Zhang et al. - k-Means, k = 3
 adjustedRandIndex(kclust3_zhang$cluster, zhang_outcome_final)
 
-# Zhang et al. - k-Means, k = 2
+# Zhang et al. - HCL, k = 2
 adjustedRandIndex(hcl2_zhang, zhang_outcome_final)
 
-
-# Moran et al. - k-Means, k = 3
-adjustedRandIndex(hcl3_moran, moran_outcome_final)
+# Zhang et al. - HCL, k = 3
+adjustedRandIndex(hcl3_zhang, zhang_outcome_final)
 
 # Moran et al. - k-Means, k = 2
 adjustedRandIndex(kclust2_moran$cluster, moran_outcome_final)
@@ -262,38 +261,38 @@ specificity <- function(tn, fp){
 
 # Matthew's correlation coefficient (=MCC)
 corcoeff <- function(tp, tn, fp, fn){
-	return(  ((tp*tn)-(fp*fn))/(sqrt((tn+fn)*(tn+fp)*(tp+fn)*(tp+fp))))
+  return(  ((tp*tn)-(fp*fn))/(sqrt((tn+fn)*(tn+fp)*(tp+fn)*(tp+fp))))
 }
 
 # Huberty's proportional chance criterion - p-value calculation for classification problems
 ppc <- function(tp, fp, tn, fn)
 {
-
-		total <- tp+fp+fn+tn
-		
-		c_pro <- ((tp+fn)/total)*((tp+fp)/total) + ((tn+fp)/total) *((tn+fn)/total)
-		
-		acc <- (tp+tn)/total
-		
-		cat('\nc_pro:',c_pro,'acc:',acc,'\n')
-		
-		
-		pval <- NULL
-		if(c_pro > acc)
-		{
-		 pval <- 1
-		} else if(c_pro != 1)
-		{
-			z <- (acc-c_pro)/sqrt(c_pro*(1-c_pro)/total)
-		
-			pval <- pnorm(-abs(z))
-			cat('\np-value: ',pval,'\n')
-			cat('\np-value (rounded): ',format(pval,digits=2),'\n')
-	
-		} else {
-		  pval <- 1
-		}
-
+  
+  total <- tp+fp+fn+tn
+  
+  c_pro <- ((tp+fn)/total)*((tp+fp)/total) + ((tn+fp)/total) *((tn+fn)/total)
+  
+  acc <- (tp+tn)/total
+  
+  cat('\nc_pro:',c_pro,'acc:',acc,'\n')
+  
+  
+  pval <- NULL
+  if(c_pro > acc)
+  {
+    pval <- 1
+  } else if(c_pro != 1)
+  {
+    z <- (acc-c_pro)/sqrt(c_pro*(1-c_pro)/total)
+    
+    pval <- pnorm(-abs(z))
+    cat('\np-value: ',pval,'\n')
+    cat('\np-value (rounded): ',format(pval,digits=2),'\n')
+    
+  } else {
+    pval <- 1
+  }
+  
   return (pval)	
 }
 
@@ -382,3 +381,4 @@ ppc(conf_moran[2,2], conf_moran[1,2], conf_moran[1,1], conf_moran[2,1])
 
 # For reproducibility: show and save information on all loaded R package versions
 sessionInfo()
+
