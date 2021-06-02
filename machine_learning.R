@@ -235,10 +235,10 @@ adjustedRandIndex(kclust2_moran$cluster, moran_outcome_final)
 # Moran et al. - k-Means, k = 3
 adjustedRandIndex(kclust3_moran$cluster, moran_outcome_final)
 
-# Moran et al. - k-Means, k = 2
+# Moran et al. - hierarchical, k = 2
 adjustedRandIndex(hcl2_moran, moran_outcome_final)
 
-# Moran et al. - k-Means, k = 3
+# Moran et al. - hierarchical, k = 3
 adjustedRandIndex(hcl3_moran, moran_outcome_final)
 
 
@@ -307,7 +307,7 @@ set.seed(1234)
 # Random Forest model for Zhang et al. data using 250 trees
 rfmod_zhang = randomForest(t(zhangvsn), factor(zhang_numout), ntree=250, keep.forest=TRUE)
 
-# show model evluation based on out-of-bag samples
+# show model evaluation based on out-of-bag samples
 rfmod_zhang
 
 # compute performance statistics
