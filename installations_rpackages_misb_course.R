@@ -156,3 +156,95 @@ if(!require('e1071'))
 	require('e1071')
 }
 
+
+
+#
+# Testing installations
+#
+
+if(!require('clusterProfiler'))
+{
+	print('The clusterProfiler package is not successfully installed!')
+}
+
+if(!require('GSEABase'))
+{
+	print('The GSEABase package is not successfully installed!')
+}
+
+if(!require('limma'))
+{
+	print('The limma package is not successfully installed!')
+}
+
+if(!require('XML'))
+{
+	print('The XML package is not successfully installed!')
+}
+
+if(!require('httr'))
+{
+	print('The httr package is not successfully installed!')
+}
+
+if(!require('easyPubMed'))
+{
+	print('The easyPubMed package is not successfully installed!')
+}
+
+if(!require('hgu133a.db'))
+{
+	print('The hgu133a.db package is not successfully installed!')
+}
+
+if(!require('arrayQualityMetrics'))
+{
+	print('The arrayQualityMetrics package is not successfully installed!')
+}
+
+if(!require('Biobase'))
+{
+	print('The Biobase package is not successfully installed!')
+}
+
+if(!require('impute'))
+{
+	print('The impute package is not successfully installed!')
+}
+
+if(!require('samr'))
+{
+	print('The samr package is not successfully installed!')
+}
+
+if(!require('vsn'))
+{
+	print('The vsn package is not successfully installed!')
+}
+
+if(!require('metaMA'))
+{
+	print('The metaMA package is not successfully installed!')
+}
+
+if(!require('cluster'))
+{
+	print('The cluster package is not successfully installed!')
+}
+
+if(!require('mclust'))
+{
+	print('The mclust package is not successfully installed!')
+}
+
+if(!require('randomForest'))
+{
+	print('The randomForest package is not successfully installed!')
+}
+
+if(!require('e1071'))
+{
+	print('The e1071 package is not successfully installed!')
+}
+
+
