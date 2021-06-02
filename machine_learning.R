@@ -323,7 +323,7 @@ head(rfmod_zhang$importance[order(rfmod_zhang$importance, decreasing=T),])
 # Random Forest model for Moran et al. data using 250 trees
 rfmod_moran = randomForest(t(moranvsn), factor(moran_numout), ntree=250, keep.forest=TRUE)
 
-# show model evluation based on out-of-bag samples
+# show model evaluation based on out-of-bag samples
 rfmod_moran
 
 # compute performance statistics
