@@ -262,7 +262,7 @@ moran_degs = rownames(ttable_moran)[which(ttable_moran$adj.P.Val < 0.05)]
 
 
 # Load pathway definitions from MSigDB:
-# Decompress the file msigdb_pathway_annoations.zip obtained from Moodle (see above)
+# Decompress the file msigdb_pathway_annotations.zip obtained from Moodle (see above)
 #
 
 msigdb_go_pathways = read.gmt("c5.all.v6.2.symbols.gmt")
@@ -526,4 +526,3 @@ write.table(t(moran_degs[1:50]), "clipboard", sep = '::', row.names = FALSE, col
 
 # For reproducibility: show and save information on all loaded R package versions
 sessionInfo()
-			
