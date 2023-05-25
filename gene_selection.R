@@ -166,6 +166,7 @@ zhangdat <- exprs(gset)
 
 head(zhangdat)
 
+
 # Filter out tissue samples which are not from the midbrain / substantia nigra region
 zhang_tissues = gset$source_name_ch1
 
@@ -266,6 +267,7 @@ moran_outcome[grep("control",moran_outcome)] = rep("control",length(grep("contro
 moran_outcome[grep("Parkinson",moran_outcome)] = rep("parkinson",length(grep("Parkinson",moran_outcome)))
 
 table(moran_outcome)
+
 
 moranfilt = morandat[,nigra_ind]
 dim(moranfilt)
