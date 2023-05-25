@@ -221,10 +221,23 @@ gene_symbols = sapply( as.character(gset@featureData@data$Gene.symbol) , functio
 
 # Read the data into R
 #morandatgeo = read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=T, comment.char="!", sep="\t")
-
+#
 # Use the labels in the first column as row names
 #morandat = morandatgeo[,2:ncol(morandatgeo)]
 #rownames(morandat) = morandatgeo[,1]
+#
+# Filter out tissue samples which are not from the midbrain / substantia nigra region
+#moran_tissues = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=36, sep="\t"))
+#moran_tissues = moran_tissues[2:length(moran_tissues)]
+#
+#nigra_ind = grep("substantia nigra",moran_tissues)
+#
+#
+#moran_outcome = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=28, sep="\t"))
+#moran_outcome = moran_outcome[2:length(moran_outcome)]
+#moran_outcome[grep("control",moran_outcome)] = rep("control",length(grep("control",moran_outcome)))
+#moran_outcome[grep("Parkinson",moran_outcome)] = rep("parkinson",length(grep("Parkinson",moran_outcome)))
+#
 
 
 gset <- getGEO("GSE8397", GSEMatrix =TRUE, AnnotGPL=TRUE)
@@ -237,16 +250,8 @@ fvarLabels(gset) <- make.names(fvarLabels(gset))
 morandat <- exprs(gset)
 
 
-
-
 # Filter out tissue samples which are not from the midbrain / substantia nigra region
-#moran_tissues = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=36, sep="\t"))
-#moran_tissues = moran_tissues[2:length(moran_tissues)]
-
-#nigra_ind = grep("substantia nigra",moran_tissues)
-
 moran_tissues = gset$source_name_ch1
-
 
 table(moran_tissues)
 # moran_tissues
@@ -255,18 +260,12 @@ table(moran_tissues)
 
 nigra_ind = grep("substantia nigra", moran_tissues)
 
-
-#moran_outcome = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=28, sep="\t"))
-#moran_outcome = moran_outcome[2:length(moran_outcome)]
-#moran_outcome[grep("control",moran_outcome)] = rep("control",length(grep("control",moran_outcome)))
-#moran_outcome[grep("Parkinson",moran_outcome)] = rep("parkinson",length(grep("Parkinson",moran_outcome)))
-
-moran_outcome = gset$title
+# Load the outcome variable (PD vs. control)
+moran_outcome = as.character(gset$title)
 moran_outcome[grep("control",moran_outcome)] = rep("control",length(grep("control",moran_outcome)))
 moran_outcome[grep("Parkinson",moran_outcome)] = rep("parkinson",length(grep("Parkinson",moran_outcome)))
 
 table(moran_outcome)
-
 
 moranfilt = morandat[,nigra_ind]
 dim(moranfilt)
