@@ -34,6 +34,15 @@ if(!require('GSEABase'))
 	require('GSEABase')
 }
 
+# install GEOquery to access datasets from the GEO database
+if(!require('GEOquery'))
+{
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+	    install.packages("BiocManager")
+	BiocManager::install("GEOquery", suppressUpdates=TRUE, ask = FALSE)
+	require('GEOquery')
+}
+
 # install Limma package for statistical analyses
 if(!require('limma'))
 {
@@ -240,6 +249,16 @@ if(!require('mclust'))
 if(!require('randomForest'))
 {
 	print('The randomForest package is not successfully installed!')
+}
+
+if(!require('limma'))
+{
+	print('The limma package is not successfully installed!')
+}
+
+if(!require('GEOquery'))
+{
+	print('The GEOquery package is not successfully installed!')
 }
 
 if(!require('e1071'))
