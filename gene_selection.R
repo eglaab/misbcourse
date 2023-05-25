@@ -164,6 +164,7 @@ fvarLabels(gset) <- make.names(fvarLabels(gset))
 
 zhangdat <- exprs(gset)
 
+head(zhangdat)
 
 # Filter out tissue samples which are not from the midbrain / substantia nigra region
 zhang_tissues = gset$source_name_ch1
