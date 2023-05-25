@@ -22,7 +22,7 @@ local({r <- getOption("repos")
 
 # load annotation package for gene ID conversion
 
-# for old R version:
+# for old R versions, install packages as follows:
 # source("http://bioconductor.org/biocLite.R")
 # biocLite("hgu133a.db")
 
@@ -34,8 +34,16 @@ if(!require('hgu133a.db'))
 	require('hgu133a.db')
 }
 
-# load R-packages for quality control
+# load package for access to datasets from the GEO database
+if(!require('GEOquery'))
+{
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+	    install.packages("BiocManager")
+	BiocManager::install("GEOquery", suppressUpdates=TRUE, ask = FALSE)
+	require('GEOquery')
+}
 
+# load R-packages for quality control
 if(!require('arrayQualityMetrics'))
 {
   if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -98,6 +106,7 @@ if(!require('metaMA'))
 
 
 
+
 # set the location of your working directory (note that there are differences between Windows & Mac concerning the use of back slash "\" vs. forward slash "/")
 
 # format for Mac & Linux systems
@@ -120,18 +129,44 @@ setwd('C:/set/your/current/working/directory/here')
 #
 
 # for Mac/Linux - automatically via R command line
-system('wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE20nnn/GSE20295/matrix/GSE20295_series_matrix.txt.gz')
+#system('wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE20nnn/GSE20295/matrix/GSE20295_series_matrix.txt.gz')
 
 # Read the data into R
-zhangdatgeo = read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=T, comment.char="!", sep="\t")
+#zhangdatgeo = read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=T, comment.char="!", sep="\t")
 
 # Use the labels in the first column as row names
-zhangdat = zhangdatgeo[,2:ncol(zhangdatgeo)]
-rownames(zhangdat) = zhangdatgeo[,1]
+#zhangdat = zhangdatgeo[,2:ncol(zhangdatgeo)]
+#rownames(zhangdat) = zhangdatgeo[,1]
+#
+#
+# Filter out tissue samples which are not from the midbrain / substantia nigra region
+#zhang_tissues = as.matrix(read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=F, nrows=1, skip=39, sep="\t"))
+#zhang_tissues = zhang_tissues[2:length(zhang_tissues)]
+#
+# Load the outcome variable (PD vs. control)
+#zhang_outcome = as.matrix(read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=F, nrows=1, skip=41, sep="\t"))
+#zhang_outcome = zhang_outcome[2:length(zhang_outcome)]
+#
+# convert Affymetrix probe set IDs to gene symbols
+#gene_symbols <- mapIds(hgu133a.db, keys=as.character(rownames(zhangfilt)), c("SYMBOL"), keytype="PROBEID")
+#head(gene_symbols)
+#
+
+
+Sys.setenv("VROOM_CONNECTION_SIZE" = 250000)
+
+gset <- getGEO("GSE20295", GSEMatrix =TRUE, AnnotGPL=TRUE)
+if (length(gset) > 1) idx <- grep("GPL96", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+
+# make proper column names
+fvarLabels(gset) <- make.names(fvarLabels(gset))
+
+zhangdat <- exprs(gset)
+
 
 # Filter out tissue samples which are not from the midbrain / substantia nigra region
-zhang_tissues = as.matrix(read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=F, nrows=1, skip=39, sep="\t"))
-zhang_tissues = zhang_tissues[2:length(zhang_tissues)]
+zhang_tissues = gset$source_name_ch1
 
 table(zhang_tissues)
 # zhang_tissues
@@ -139,10 +174,11 @@ table(zhang_tissues)
 #                                     29                                      35                                      29 
 
 # select only substantia nigra samples
-nigra_ind = which(zhang_tissues == "Postmortem brain whole substantia nigra")
+nigra_ind = grep("substantia nigra", zhang_tissues)
 
-zhang_outcome = as.matrix(read.table(gzfile("GSE20295_series_matrix.txt.gz"), header=F, nrows=1, skip=41, sep="\t"))
-zhang_outcome = zhang_outcome[2:length(zhang_outcome)]
+# Load the outcome variable (PD vs. control)
+zhang_outcome = gset$characteristics_ch1
+
 table(zhang_outcome)
 #zhang_outcome
 #            disease state: control             disease state: Control disease state: Parkinson's disease 
@@ -160,9 +196,11 @@ table(zhang_outcomefilt)
 #           disease state: Control disease state: Parkinsons disease 
 #                               18                                11
 
-# convert Affymetrix probe set IDs to gene symbols
-conv_ids <- mapIds(hgu133a.db, keys=as.character(rownames(zhangfilt)), c("SYMBOL"), keytype="PROBEID")
-head(conv_ids)
+
+gene_symbols = sapply( as.character(gset@featureData@data$Gene.symbol) , function(x) strsplit(x, "///")[[1]][1])
+
+
+# replace by loading Affymetrix annotations manually
 
 
 #
@@ -178,25 +216,56 @@ head(conv_ids)
 #
 
 # for Mac/Linux - automatically via R command line
-system('wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE8nnn/GSE8397/matrix/GSE8397-GPL96_series_matrix.txt.gz')
+#system('wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE8nnn/GSE8397/matrix/GSE8397-GPL96_series_matrix.txt.gz')
 
 # Read the data into R
-morandatgeo = read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=T, comment.char="!", sep="\t")
+#morandatgeo = read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=T, comment.char="!", sep="\t")
 
 # Use the labels in the first column as row names
-morandat = morandatgeo[,2:ncol(morandatgeo)]
-rownames(morandat) = morandatgeo[,1]
+#morandat = morandatgeo[,2:ncol(morandatgeo)]
+#rownames(morandat) = morandatgeo[,1]
+
+
+gset <- getGEO("GSE8397", GSEMatrix =TRUE, AnnotGPL=TRUE)
+if (length(gset) > 1) idx <- grep("GPL96", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+
+# make proper column names
+fvarLabels(gset) <- make.names(fvarLabels(gset))
+
+morandat <- exprs(gset)
+
+
+
 
 # Filter out tissue samples which are not from the midbrain / substantia nigra region
-moran_tissues = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=36, sep="\t"))
-moran_tissues = moran_tissues[2:length(moran_tissues)]
+#moran_tissues = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=36, sep="\t"))
+#moran_tissues = moran_tissues[2:length(moran_tissues)]
 
-nigra_ind = grep("substantia nigra",moran_tissues)
+#nigra_ind = grep("substantia nigra",moran_tissues)
 
-moran_outcome = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=28, sep="\t"))
-moran_outcome = moran_outcome[2:length(moran_outcome)]
+moran_tissues = gset$source_name_ch1
+
+
+table(moran_tissues)
+# moran_tissues
+#  Post mortem superior frontal gyrus Post-mortem lateral substantia nigra  Post-mortem medial substantia nigra 
+#                                   8                                   16                                   23
+
+nigra_ind = grep("substantia nigra", moran_tissues)
+
+
+#moran_outcome = as.matrix(read.table(gzfile("GSE8397-GPL96_series_matrix.txt.gz"), header=F, nrows=1, skip=28, sep="\t"))
+#moran_outcome = moran_outcome[2:length(moran_outcome)]
+#moran_outcome[grep("control",moran_outcome)] = rep("control",length(grep("control",moran_outcome)))
+#moran_outcome[grep("Parkinson",moran_outcome)] = rep("parkinson",length(grep("Parkinson",moran_outcome)))
+
+moran_outcome = gset$title
 moran_outcome[grep("control",moran_outcome)] = rep("control",length(grep("control",moran_outcome)))
 moran_outcome[grep("Parkinson",moran_outcome)] = rep("parkinson",length(grep("Parkinson",moran_outcome)))
+
+table(moran_outcome)
+
 
 moranfilt = morandat[,nigra_ind]
 dim(moranfilt)
@@ -205,7 +274,7 @@ dim(moranfilt)
 moran_outcomefilt = moran_outcome[nigra_ind]
 table(moran_outcomefilt)
 #moran_outcomefilt
-#  control Parkinson 
+#  control parkinson 
 #       15        24
 
 all(rownames(zhangfilt) == rownames(moranfilt))
@@ -383,6 +452,8 @@ ttable_zhang <- topTable(eb, n = nrow(zhangfilt2))
 head(ttable_zhang)
 
 
+
+
 # Limma analysis of Moran dataset
 design <- model.matrix(~ -1+factor(moran_outcome_final))
 colnames(design) <- unique(moran_outcome_final)
@@ -416,7 +487,7 @@ pmat = cbind(ttable_zhang[match(rownames(zhangvsn), rownames(ttable_zhang)),]$P,
 rownames(pmat)= rownames(zhangvsn)
 
 
-compresmeta = cbind(metacomb[metaord,1], conv_ids[match(metacomb[metaord,1],rownames(logfcmat))], logfcmat[match(metacomb[metaord,1],rownames(logfcmat)),], pmat[match(metacomb[metaord,1],rownames(pmat)),], metacomb[metaord,2])
+compresmeta = cbind(metacomb[metaord,1], gene_symbols[match(metacomb[metaord,1],rownames(logfcmat))], logfcmat[match(metacomb[metaord,1],rownames(logfcmat)),], pmat[match(metacomb[metaord,1],rownames(pmat)),], metacomb[metaord,2])
 colnames(compresmeta) = c("ID", "Gene Symbol", paste(c("Zhang","Moran"),"logFC"), paste(c("Zhang","Moran"),"P"), "Comb. Z")
 
 head(compresmeta)
@@ -427,6 +498,12 @@ dim(compresmeta)
 # save datasets to continue with pathway analysis tomorrow
 save(moranvsn, moran_outcome_final, file="moran_preprocessed.Rdata")
 save(zhangvsn, zhang_outcome_final, file="zhang_preprocessed.Rdata")
+
+# Alternatively, we can save the entire session (requires more space)
+save.image()
+# reload the session data
+#load(".RData")
+
 
 # For reproducibility: show and save information on all loaded R package versions
 sessionInfo()
