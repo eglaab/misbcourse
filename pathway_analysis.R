@@ -117,7 +117,7 @@ system('unzip HG-U133A.na36.annot.csv.zip')
 
 # read annotations file (ignoring comments)
 annot = read.csv("HG-U133A.na36.annot.csv", comment.char="#")
-head(annot)
+head(annot[,c(1,14:15)])
 
 # map probes to microarray rownames
 mapids = match(rownames(zhangvsn), annot$Probe.Set.ID)
