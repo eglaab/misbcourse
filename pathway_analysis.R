@@ -284,42 +284,38 @@ head(msigdb_go_pathways)
 # rm(moranvsn)
 # gc()
 
-fisher_go_zhang <- enricher(zhang_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_go_pathways)
-head(fisher_go_zhang[,1:5])
+fisher_go_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_go_pathways)
+head(fisher_go_zhang[,1:6])
 
-fisher_kegg_zhang <- enricher(zhang_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_kegg_pathways)
-head(fisher_kegg_zhang)
+fisher_kegg_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_kegg_pathways)
+head(fisher_kegg_zhang[,1:6])
 
-fisher_biocarta_zhang <- enricher(zhang_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_biocarta_pathways)
-head(fisher_biocarta_zhang)
+fisher_biocarta_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_biocarta_pathways)
+head(fisher_biocarta_zhang[,1:6])
 # no gene can be mapped
 
-fisher_reactome_zhang <- enricher(zhang_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_reactome_pathways)
-head(fisher_reactome_zhang)
+fisher_reactome_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_reactome_pathways)
+head(fisher_reactome_zhang[,1:6])
 
-fisher_positional_zhang <- enricher(zhang_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_positional)
-head(fisher_positional_zhang)
+fisher_positional_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_positional)
+head(fisher_positional_zhang[,1:6])
 
 
 #
 # Apply classical Fisher's Exact test (significance-of-overlap computation) - Moran et al.
 #
 
-fisher_go_moran <- enricher(moran_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_go_pathways)
-head(fisher_go_moran)
+fisher_go_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_go_pathways)
+head(fisher_go_moran[,1:6])
 
-fisher_kegg_moran <- enricher(moran_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_kegg_pathways)
-head(fisher_kegg_moran)
+fisher_kegg_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_kegg_pathways)
+head(fisher_kegg_moran[,1:6])
 
-fisher_biocarta_moran <- enricher(moran_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_biocarta_pathways)
-head(fisher_biocarta_moran)
-# no gene can be mapped
+fisher_reactome_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_reactome_pathways)
+head(fisher_reactome_moran[,1:6])
 
-fisher_reactome_moran <- enricher(moran_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_reactome_pathways)
-head(fisher_reactome_moran)
-
-fisher_positional_moran <- enricher(moran_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_positional)
-head(fisher_positional_moran)
+fisher_positional_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_positional)
+head(fisher_positional_moran[,1:6])
 
 
 
@@ -334,22 +330,22 @@ names(ranked_genelst) = rownames(ttable_zhang)
 gsea_go_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                      maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
                      TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_go_zhang)
+head(gsea_go_zhang[,1:7])
 
 gsea_kegg_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                        maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
                        TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_kegg_zhang)
+head(gsea_kegg_zhang[,1:7])
 
 gsea_reactome_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                            maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
                            TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_reactome_zhang)  
+head(gsea_reactome_zhang[,1:7])  
 
 gsea_positional_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                              maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
                              TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_positional_zhang)
+head(gsea_positional_zhang[,1:7])
 
 
 #
@@ -362,22 +358,22 @@ names(ranked_genelst) = rownames(ttable_moran)
 gsea_go_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                      maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
                      TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_go_moran)
+head(gsea_go_moran[,1:7])
 
 gsea_kegg_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                        maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
                        TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_kegg_moran)
+head(gsea_kegg_moran[,1:7])
 
 gsea_reactome_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                            maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
                            TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_reactome_moran)  
+head(gsea_reactome_moran[,1:7])  
 
 gsea_positional_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
                              maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
                              TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
-head(gsea_positional_moran)
+head(gsea_positional_moran[,1:7])
 
 
 #
@@ -466,6 +462,10 @@ for(i in 1:length(gene_scores))
   gene_scores[i] = pmi(names(gene_scores)[i], "Parkinson")
   cat(paste(" - PMI-score:",gene_scores[i],"\n"))
 }
+
+# Show sorted scores
+gene_scores[order(gene_scores, decreasing=T)]
+
 
 # Moran et al.
 gene_scores = numeric(50)
