@@ -108,15 +108,15 @@ all(rownames(zhangvsn) == rownames(moranvsn))
 # unzip Affymetrix annotation file (downloaded from Moodle into the working directory, see above):
 #
 # In Windows:
-# - unzip the file "HG-U133A.na35.annot.csv.zip" manually
+# - unzip the file "HG-U133A.na36.annot.csv.zip" manually
 #
 # In Mac/Linux:
 # - use the following line of code:
-system('unzip HG-U133A.na35.annot.csv.zip')
+system('unzip HG-U133A.na36.annot.csv.zip')
 
 
 # read annotations file (ignoring comments)
-annot = read.csv("HG-U133A.na35.annot.csv", comment.char="#")
+annot = read.csv("HG-U133A.na36.annot.csv", comment.char="#")
 head(annot)
 
 # map probes to microarray rownames
@@ -128,7 +128,7 @@ any(is.na(mapids))
 # ok, no missing IDs
 
 # extract gene symbols corresponding to microarray Probe IDs (take always the first symbol mapped)
-mapped_symbols = sapply( as.character(annot$Gene.Symbol[mapids]) , function(x) strsplit(x, " /// ")[[1]][1])
+gene_symbols = sapply( as.character(annot$Gene.Symbol[mapids]) , function(x) strsplit(x, " /// ")[[1]][1])
 
 
 
@@ -183,7 +183,7 @@ probe2genemat <- function(matdat, mat_conv)
 }
 
 # Run the conversion from probe matrix to gene matrix (Zhang data)
-zhang_symb = probe2genemat(zhangvsn, mapped_symbols)
+zhang_symb = probe2genemat(zhangvsn, gene_symbols)
 # get the original column names
 colnames(zhang_symb) = colnames(zhangvsn)
 
@@ -193,7 +193,7 @@ dim(zhang_symb)
 # the matrix has less rows than the probe expression matrix, as expected
 
 # Run the conversion from probe matrix to gene matrix (Moran data)
-moran_symb = probe2genemat(moranvsn, mapped_symbols)
+moran_symb = probe2genemat(moranvsn, gene_symbols)
 colnames(moran_symb) = colnames(moranvsn)
 
 dim(moran_symb)
@@ -262,7 +262,7 @@ moran_degs = rownames(ttable_moran)[which(ttable_moran$adj.P.Val < 0.05)]
 
 
 # Load pathway definitions from MSigDB:
-# Decompress the file msigdb_pathway_annotations.zip obtained from Moodle (see above)
+# Decompress the file msigdb_pathway_annoations.zip obtained from Moodle (see above)
 #
 
 msigdb_go_pathways = read.gmt("c5.all.v6.2.symbols.gmt")
@@ -279,8 +279,13 @@ head(msigdb_go_pathways)
 # Apply classical Fisher's Exact test (significance-of-overlap computation) - Zhang et al.
 #
 
+# in case of lack of memory:
+# rm(zhangvsn)
+# rm(moranvsn)
+# gc()
+
 fisher_go_zhang <- enricher(zhang_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_go_pathways)
-head(fisher_go_zhang)
+head(fisher_go_zhang[,1:5])
 
 fisher_kegg_zhang <- enricher(zhang_degs, universe = mapped_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_kegg_pathways)
 head(fisher_kegg_zhang)
@@ -522,6 +527,11 @@ write.table(t(moran_degs[1:50]), "clipboard", sep = '::', row.names = FALSE, col
 # DAVID website for pathway enrichment analysis: http://david.abcc.ncifcrf.gov/
 # g:Profiler -- a web server for functional enrichment analysis and conversions of gene lists: https://biit.cs.ut.ee/gprofiler/gost 
 #
+
+# optionally, save the session
+save.image()
+# reload the session data
+#load(".RData")
 
 
 # For reproducibility: show and save information on all loaded R package versions
