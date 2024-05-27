@@ -189,7 +189,6 @@ colnames(zhang_symb) = colnames(zhangvsn)
 
 # show the dimensions of the new gene expression matrix
 dim(zhang_symb)
-# 13238    26 
 # the matrix has less rows than the probe expression matrix, as expected
 
 # Run the conversion from probe matrix to gene matrix (Moran data)
@@ -197,7 +196,6 @@ moran_symb = probe2genemat(moranvsn, gene_symbols)
 colnames(moran_symb) = colnames(moranvsn)
 
 dim(moran_symb)
-# 13238    39
 
 
 
