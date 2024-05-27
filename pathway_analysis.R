@@ -325,24 +325,24 @@ head(fisher_positional_moran[,1:6])
 ranked_genelst = ttable_zhang$B
 names(ranked_genelst) = rownames(ttable_zhang)
 
-gsea_go_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_go_zhang = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                      maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
-                     TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                     TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_go_zhang[,1:7])
 
-gsea_kegg_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_kegg_zhang = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                        maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
-                       TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                       TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_kegg_zhang[,1:7])
 
-gsea_reactome_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_reactome_zhang = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                            maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
-                           TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                           TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_reactome_zhang[,1:7])  
 
-gsea_positional_zhang = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_positional_zhang = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                              maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
-                             TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                             TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_positional_zhang[,1:7])
 
 
@@ -353,24 +353,24 @@ head(gsea_positional_zhang[,1:7])
 ranked_genelst = ttable_moran$B
 names(ranked_genelst) = rownames(ttable_moran)
 
-gsea_go_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_go_moran = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                      maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_go_pathways,
-                     TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                     TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_go_moran[,1:7])
 
-gsea_kegg_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_kegg_moran = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                        maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_kegg_pathways,
-                       TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                       TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_kegg_moran[,1:7])
 
-gsea_reactome_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_reactome_moran = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                            maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_reactome_pathways,
-                           TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                           TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_reactome_moran[,1:7])  
 
-gsea_positional_moran = GSEA(ranked_genelst, exponent = 1, nPerm = 1000, minGSSize = 10,
+gsea_positional_moran = GSEA(ranked_genelst, exponent = 1, minGSSize = 10,
                              maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH", TERM2GENE = msigdb_positional,
-                             TERM2NAME = NA, verbose = TRUE, seed = FALSE, by = "fgsea")
+                             TERM2NAME = NA, verbose = TRUE, seed = 1, by = "fgsea")
 head(gsea_positional_moran[,1:7])
 
 
