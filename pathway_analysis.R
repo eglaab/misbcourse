@@ -522,9 +522,34 @@ write.table(t(moran_degs[1:50]), "clipboard", sep = '::', row.names = FALSE, col
 
 #
 # Other resources for enrichment analysis (require only gene list as input):
-# DAVID website for pathway enrichment analysis: http://david.abcc.ncifcrf.gov/
+# DAVID website for pathway enrichment analysis: https://david.ncifcrf.gov/summary.jsp
 # g:Profiler -- a web server for functional enrichment analysis and conversions of gene lists: https://biit.cs.ut.ee/gprofiler/gost 
 #
+
+# Copy to clipboard for DAVID and g:Profiler website:
+
+# Zhang et al.
+                      
+# Mac version
+clip <- pipe("pbcopy", "w")                       
+write.table(t(zhang_degs), file=clip, sep = '\n', row.names = FALSE, col.names= FALSE, quote = FALSE) 
+close(clip)
+
+# Windows version
+write.table(t(zhang_degs), "clipboard", sep = '\n', row.names = FALSE, col.names= FALSE, quote = FALSE) 
+
+                      
+# Moran et al.
+
+# Mac version
+clip <- pipe("pbcopy", "w")                     
+write.table(t(moran_degs[1:50]), file=clip, sep = '\n', row.names = FALSE, col.names= FALSE, quote = FALSE) 
+close(clip)
+
+# Windows version
+write.table(t(moran_degs[1:50]), "clipboard", sep = '\n', row.names = FALSE, col.names= FALSE, quote = FALSE) 
+
+
 
 # optionally, save the session
 save.image()
