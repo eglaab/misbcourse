@@ -116,6 +116,8 @@ system('unzip HG-U133A.na36.annot.csv.zip')
 
 
 # read annotations file (ignoring comments)
+# get annotations directly from the GEO database (if still loaded from the previous day):
+# annot = fData(gset)
 annot = read.csv("HG-U133A.na36.annot.csv", comment.char="#")
 head(annot[,c(1,14:15)])
 
