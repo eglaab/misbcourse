@@ -2,8 +2,8 @@
 # R code for the data quality control and differential expression meta-analysis in the course "Top-Down Systems Biology"
 #
 # Installation instructions:
-# - Install the current version of R (3.6) for your operating system from https://ftp.gwdg.de/pub/misc/cran/
-# - Install the current version of R-Studio (1.2) from: https://www.rstudio.com/products/rstudio/download/
+# - Install a current version of R (>3.6) for your operating system from https://ftp.gwdg.de/pub/misc/cran/
+# - Install a current version of R-Studio (>1.2) from: https://www.rstudio.com/products/rstudio/download/
 #
 
 #
