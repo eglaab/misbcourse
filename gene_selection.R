@@ -1,5 +1,5 @@
 #
-# R code for the data quality control and differential expression meta-analysis in the MISB course "Top-Down Systems Biology"
+# R code for the data quality control and differential expression meta-analysis in the course "Top-Down Systems Biology"
 #
 # Installation instructions:
 # - Install the current version of R (3.6) for your operating system from https://ftp.gwdg.de/pub/misc/cran/
