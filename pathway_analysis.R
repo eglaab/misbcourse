@@ -523,9 +523,10 @@ write.table(t(moran_degs[1:50]), "clipboard", sep = '::', row.names = FALSE, col
 
 
 #
-# Other resources for enrichment analysis (require only gene list as input):
+# Other resources for enrichment and network analysis (require only gene list as input):
 # DAVID website for pathway enrichment analysis: https://david.ncifcrf.gov/summary.jsp
 # g:Profiler -- a web server for functional enrichment analysis and conversions of gene lists: https://biit.cs.ut.ee/gprofiler/gost 
+# STRING Database - Protein–protein interactions, many with literature support: https://string-db.org/
 #
 
 # Copy to clipboard for DAVID and g:Profiler website:
