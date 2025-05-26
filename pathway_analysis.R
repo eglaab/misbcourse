@@ -481,11 +481,11 @@ for(i in 1:length(gene_scores))
 gene_scores[order(gene_scores, decreasing=T)]
 
 #
-# Chilibot: Go to http://chilibot.net
+# PubTator3: Go to https://www.ncbi.nlm.nih.gov/research/pubtator3
 # Search for relation between two genes / proteins / keywords (compare top-ranked genes vs. "Parkinson": 
-# Try: NR4A2 & Parkinson
-# Try: DRD2 & Parkinson
-# Try: DDC & Parkinson
+# Try: @GENE_CUX2 AND @DISEASE_Parkinson_Disease 
+# Try: @GENE_DRD2 AND @DISEASE_Parkinson_Disease 
+# Try: @GENE_DDC AND @DISEASE_Parkinson_Disease
 #
 
 
