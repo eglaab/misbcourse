@@ -1,5 +1,5 @@
 #
-# R code for the machine learning analyses in the MISB course "Top-Down Systems Biology"
+# R code for the machine learning analyses in the course "Top-Down Systems Biology"
 #
 # Required input data in the working folder:
 #
