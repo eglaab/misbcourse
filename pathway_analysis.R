@@ -284,21 +284,22 @@ head(msigdb_go_pathways)
 # rm(moranvsn)
 # gc()
 
+
 fisher_go_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_go_pathways)
-head(fisher_go_zhang[,1:6])
+head(fisher_go_zhang[,c(1,2,6,8,10)])
 
 fisher_kegg_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_kegg_pathways)
-head(fisher_kegg_zhang[,1:6])
+head(fisher_kegg_zhang[,c(1,2,6,8,10)])
 
 fisher_biocarta_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_biocarta_pathways)
-head(fisher_biocarta_zhang[,1:6])
+head(fisher_biocarta_zhang[,c(1,2,6,8,10)])
 # no gene can be mapped
 
 fisher_reactome_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_reactome_pathways)
-head(fisher_reactome_zhang[,1:6])
+head(fisher_reactome_zhang[,c(1,2,6,8,10)])
 
 fisher_positional_zhang <- enricher(zhang_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_positional)
-head(fisher_positional_zhang[,1:6])
+head(fisher_positional_zhang[,c(1,2,6,8,10)])
 
 
 #
@@ -306,17 +307,16 @@ head(fisher_positional_zhang[,1:6])
 #
 
 fisher_go_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_go_pathways)
-head(fisher_go_moran[,1:6])
+head(fisher_go_moran[,c(1,2,6,8,10)])
 
 fisher_kegg_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_kegg_pathways)
-head(fisher_kegg_moran[,1:6])
+head(fisher_kegg_moran[,c(1,2,6,8,10)])
 
 fisher_reactome_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_reactome_pathways)
-head(fisher_reactome_moran[,1:6])
+head(fisher_reactome_moran[,c(1,2,6,8,10)])
 
 fisher_positional_moran <- enricher(moran_degs, universe = gene_symbols, pAdjustMethod = "BH", pvalueCutoff=1.0, qvalueCutoff = 0.2, TERM2GENE = msigdb_positional)
-head(fisher_positional_moran[,1:6])
-
+head(fisher_positional_moran[,c(1,2,6,8,10)])
 
 
 
