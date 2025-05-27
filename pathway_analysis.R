@@ -527,6 +527,7 @@ write.table(t(moran_degs[1:50]), "clipboard", sep = '::', row.names = FALSE, col
 # DAVID website for pathway enrichment analysis: https://david.ncifcrf.gov/summary.jsp
 # g:Profiler -- a web server for functional enrichment analysis and conversions of gene lists: https://biit.cs.ut.ee/gprofiler/gost 
 # STRING Database - Protein–protein interactions, many with literature support: https://string-db.org/
+# GeneMania - predict the function of genes and gene sets: https://genemania.org/
 #
 
 # Copy to clipboard for DAVID and g:Profiler website:
